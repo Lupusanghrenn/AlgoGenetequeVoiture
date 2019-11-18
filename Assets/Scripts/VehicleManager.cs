@@ -3,7 +3,6 @@
 public class VehicleManager : MonoBehaviour
 {
     public float maxRange = 10.0f;
-    public Transform Origin;
 
     void Update()
     {
@@ -18,36 +17,39 @@ public class VehicleManager : MonoBehaviour
         //left max range vector
         Vector3 vectorLeft = Quaternion.AngleAxis(-45, Vector3.up) * transform.forward;
         
-        //Debug rays hit
+        //--Debug rays hit--
+        //FRONT
         RaycastHit hit;
-        if (Physics.Raycast(Origin.position, transform.forward, out hit, maxRange))
+        if (Physics.Raycast(transform.position, transform.forward, out hit, maxRange))
         {
-            Debug.DrawRay(Origin.position, transform.forward * hit.distance, Color.green);
-            Debug.Log("Did Hit");
+            Debug.DrawRay(transform.position, transform.forward * hit.distance, Color.green);
+            Debug.Log("Hit");
         }
         else
         {
-            Debug.DrawRay(Origin.position, transform.forward * maxRange, Color.red);
+            Debug.DrawRay(transform.position, transform.forward * maxRange, Color.red);
         }
 
-        if (Physics.Raycast(Origin.position, vectorRight, out hit, maxRange))
+        //RIGHT
+        if (Physics.Raycast(transform.position, vectorRight, out hit, maxRange))
         {
-            Debug.DrawRay(Origin.position, vectorRight * hit.distance, Color.green);
-            Debug.Log("Did Hit");
+            Debug.DrawRay(transform.position, vectorRight * hit.distance, Color.green);
+            Debug.Log("Hit");
         }
         else
         {
-            Debug.DrawRay(Origin.position, vectorRight * maxRange, Color.red);
+            Debug.DrawRay(transform.position, vectorRight * maxRange, Color.red);
         }
 
-        if (Physics.Raycast(Origin.position, vectorLeft, out hit, maxRange))
+        //LEFT
+        if (Physics.Raycast(transform.position, vectorLeft, out hit, maxRange))
         {
-            Debug.DrawRay(Origin.position, vectorLeft * hit.distance, Color.green);
-            Debug.Log("Did Hit");
+            Debug.DrawRay(transform.position, vectorLeft * hit.distance, Color.green);
+            Debug.Log("Hit");
         }
         else
         {
-            Debug.DrawRay(Origin.position, vectorLeft * maxRange, Color.red);
+            Debug.DrawRay(transform.position, vectorLeft * maxRange, Color.red);
         }
     }
 }

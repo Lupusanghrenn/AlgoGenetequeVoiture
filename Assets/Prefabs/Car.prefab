@@ -9,7 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 636457377118897122}
-  - component: {fileID: 5703653343233581817}
+  - component: {fileID: 2305028449206681938}
+  - component: {fileID: 6774351277709438834}
   m_Layer: 0
   m_Name: Car
   m_TagString: Untagged
@@ -25,14 +26,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7096506243655444643}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -37.505108, y: -42.32333, z: 9.0377}
+  m_LocalPosition: {x: -37.505108, y: -41.869, z: 9.0377}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6374533037290268625}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5703653343233581817
+--- !u!114 &2305028449206681938
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,20 +42,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 7096506243655444643}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 937780b2401e5e74d8c567c1ba8d98fa, type: 3}
+  m_Script: {fileID: 11500000, guid: dd8035f0b9b74a64994a7fbc938adfca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
   maxRange: 10
-  Origin: {fileID: 636457377118897122}
-  cylindreFront: {fileID: 8135632258445837138, guid: 6f7bf2a0108f0364fb7236ecfb0557ec,
-    type: 3}
-  cylindreLeft: {fileID: 8135632258445837138, guid: 6f7bf2a0108f0364fb7236ecfb0557ec,
-    type: 3}
-  cylindreRight: {fileID: 8135632258445837138, guid: 6f7bf2a0108f0364fb7236ecfb0557ec,
-    type: 3}
-  red: {fileID: 2100000, guid: 68bcf4eaf15443b4fb4d6e5d8c67855a, type: 2}
-  green: {fileID: 2100000, guid: 1c74a7a2b5fcb9c459d79c6cfd36079f, type: 2}
+  Origin: {fileID: 0}
+--- !u!65 &6774351277709438834
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7096506243655444643}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.54, y: 2.55, z: 5.39}
+  m_Center: {x: 0, y: 1.27, z: -1.58}
 --- !u!1001 &6374533037290143057
 PrefabInstance:
   m_ObjectHideFlags: 0
