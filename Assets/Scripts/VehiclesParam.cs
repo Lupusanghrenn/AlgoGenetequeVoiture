@@ -5,7 +5,6 @@ using UnityEngine;
 public class VehiclesParam : MonoBehaviour
 {
     // Start is called before the first frame update
-    public float speed = 2.0f;
     public float maxRange = 10.0f;
     public Transform Origin;
 
@@ -23,7 +22,6 @@ public class VehiclesParam : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //VehiclesMovement();
         Raycast();
     }
 
@@ -118,10 +116,5 @@ public class VehiclesParam : MonoBehaviour
             Debug.DrawRay(Origin.position, transform.forward * maxRange, Color.red);
             Debug.Log("Did not Hit");
         }*/
-    }
-
-    public void VehiclesMovement()
-    {
-        transform.position += transform.forward * Time.deltaTime * speed;
     }
 }

@@ -46,7 +46,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 2
   maxRange: 10
-  Origin: {fileID: 0}
+  Origin: {fileID: 636457377118897122}
+  cylindreFront: {fileID: 8135632258445837138, guid: 6f7bf2a0108f0364fb7236ecfb0557ec,
+    type: 3}
+  cylindreLeft: {fileID: 8135632258445837138, guid: 6f7bf2a0108f0364fb7236ecfb0557ec,
+    type: 3}
+  cylindreRight: {fileID: 8135632258445837138, guid: 6f7bf2a0108f0364fb7236ecfb0557ec,
+    type: 3}
+  red: {fileID: 2100000, guid: 68bcf4eaf15443b4fb4d6e5d8c67855a, type: 2}
+  green: {fileID: 2100000, guid: 1c74a7a2b5fcb9c459d79c6cfd36079f, type: 2}
 --- !u!1001 &6374533037290143057
 PrefabInstance:
   m_ObjectHideFlags: 0
