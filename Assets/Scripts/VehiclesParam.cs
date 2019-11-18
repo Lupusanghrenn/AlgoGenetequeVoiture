@@ -31,13 +31,15 @@ public class VehiclesParam : MonoBehaviour
         Vector3 vectorLeft = Quaternion.AngleAxis(-45, Vector3.up) * transform.forward;
 
         //Debug rays hit
-        RaycastHit hit;
+        RaycastHit hitFront;
+        RaycastHit hitLeft;
+        RaycastHit hitRight;
         //FRONT
-        if (Physics.Raycast(Origin.position, transform.forward, out hit, maxRange))
+        if (Physics.Raycast(Origin.position, transform.forward, out hitFront, maxRange))
         {
-            cylindreFront.transform.position = Origin.transform.position + 0.5f * Origin.forward * hit.distance;
+            cylindreFront.transform.position = Origin.transform.position + 0.5f * Origin.forward * hitFront.distance;
             Vector3 scale = cylindreFront.transform.localScale;
-            scale.y = (0.5f * Origin.forward * hit.distance).magnitude;
+            scale.y = (0.5f * Origin.forward * hitFront.distance).magnitude;
             cylindreFront.transform.localScale = scale;
             cylindreFront.GetComponent<MeshRenderer>().material = green;
             Debug.Log("Did Hit Front");
@@ -52,11 +54,11 @@ public class VehiclesParam : MonoBehaviour
         }
 
         //RIGHT
-        if (Physics.Raycast(Origin.position, vectorRight, out hit, maxRange))
+        if (Physics.Raycast(Origin.position, vectorRight, out hitRight, maxRange))
         {
-            cylindreRight.transform.position = Origin.transform.position + 0.5f * vectorRight * hit.distance;
+            cylindreRight.transform.position = Origin.transform.position + 0.5f * vectorRight * hitRight.distance;
             Vector3 scale = cylindreRight.transform.localScale;
-            scale.y = (0.5f * vectorRight * hit.distance).magnitude;
+            scale.y = (0.5f * vectorRight * hitRight.distance).magnitude;
             cylindreRight.transform.localScale = scale;
             cylindreRight.GetComponent<MeshRenderer>().material = green;
             Debug.Log("Did Hit");
@@ -71,11 +73,11 @@ public class VehiclesParam : MonoBehaviour
         }
 
         //LEFT
-        if (Physics.Raycast(Origin.position, vectorLeft, out hit, maxRange))
+        if (Physics.Raycast(Origin.position, vectorLeft, out hitLeft, maxRange))
         {
-            cylindreLeft.transform.position = Origin.transform.position + 0.5f * vectorLeft * hit.distance;
+            cylindreLeft.transform.position = Origin.transform.position + 0.5f * vectorLeft * hitLeft.distance;
             Vector3 scale = cylindreLeft.transform.localScale;
-            scale.y = (0.5f * vectorLeft * hit.distance).magnitude;
+            scale.y = (0.5f * vectorLeft * hitLeft.distance).magnitude;
             cylindreLeft.transform.localScale = scale;
             cylindreLeft.GetComponent<MeshRenderer>().material = green;
             Debug.Log("Did Hit");
