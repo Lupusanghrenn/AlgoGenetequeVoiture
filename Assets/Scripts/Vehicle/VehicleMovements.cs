@@ -2,20 +2,18 @@
 
 public class VehicleMovements : MonoBehaviour
 {
-    public Rigidbody rb;
-    [Range(0, 100)]
-    public float speed = 0.5f;
+    public VehicleManager manager;
     public float maxAngleTurn = 30;
 
-    [Range(-1, 1)]
-    public float steer;
-       
-    private void FixedUpdate()
+    [Range(-1, 1)] public float steer;
+    [Range(-50, 500)] public float speed = 5f;
+
+    public void Move()
     {
-        rb.velocity = transform.forward * speed * Time.deltaTime;
+        manager.rb.velocity = transform.forward * speed * Time.deltaTime;
 
         Vector3 eulerAngleVelocity = new Vector3(0, steer * maxAngleTurn, 0);
         Quaternion deltaRotation = Quaternion.Euler(eulerAngleVelocity * Time.deltaTime);
-        rb.MoveRotation(rb.rotation * deltaRotation);
+        manager.rb.MoveRotation(manager.rb.rotation * deltaRotation);
     }
 }

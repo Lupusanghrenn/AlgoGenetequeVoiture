@@ -2,56 +2,71 @@
 
 public class VehicleManager : MonoBehaviour
 {
-    public float maxRange = 10.0f;
-
+    public VehicleMovements vehicleMovements;
+    public Rigidbody rb;
     public Transform pivot;
+
+    public float maxRangeDebugRay = 10.0f;
+
+    public bool collision = false;
+    public float distanceTravelled = 0f;
 
     void Update()
     {
         DebugRaycast();
     }
 
+    private void FixedUpdate()
+    {
+        if (!collision)
+        {
+            vehicleMovements.Move();
+        }
+        else
+            rb.velocity = new Vector3();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Circuit_Wall")
+            collision = true;
+    }
+
     public void DebugRaycast()
     {
-        //right max range vector
         Vector3 vectorRight = Quaternion.AngleAxis(45, Vector3.up) * pivot.forward;
-
-        //left max range vector
         Vector3 vectorLeft = Quaternion.AngleAxis(-45, Vector3.up) * pivot.forward;
         
         //--Debug rays hit--
         //FRONT
         RaycastHit hit;
-        if (Physics.Raycast(pivot.position, pivot.forward, out hit, maxRange))
+        if (Physics.Raycast(pivot.position, pivot.forward, out hit, maxRangeDebugRay))
         {
             Debug.DrawRay(pivot.position, pivot.forward * hit.distance, Color.green);
-            Debug.Log("Hit");
         }
         else
         {
-            Debug.DrawRay(pivot.position, pivot.forward * maxRange, Color.red);
+            Debug.DrawRay(pivot.position, pivot.forward * maxRangeDebugRay, Color.red);
         }
 
         //RIGHT
-        if (Physics.Raycast(pivot.position, vectorRight, out hit, maxRange))
+        if (Physics.Raycast(pivot.position, vectorRight, out hit, maxRangeDebugRay))
         {
             Debug.DrawRay(pivot.position, vectorRight * hit.distance, Color.green);
-            Debug.Log("Hit");
         }
         else
         {
-            Debug.DrawRay(pivot.position, vectorRight * maxRange, Color.red);
+            Debug.DrawRay(pivot.position, vectorRight * maxRangeDebugRay, Color.red);
         }
 
         //LEFT
-        if (Physics.Raycast(pivot.position, vectorLeft, out hit, maxRange))
+        if (Physics.Raycast(pivot.position, vectorLeft, out hit, maxRangeDebugRay))
         {
             Debug.DrawRay(pivot.position, vectorLeft * hit.distance, Color.green);
-            Debug.Log("Hit");
         }
         else
         {
-            Debug.DrawRay(pivot.position, vectorLeft * maxRange, Color.red);
+            Debug.DrawRay(pivot.position, vectorLeft * maxRangeDebugRay, Color.red);
         }
     }
 }

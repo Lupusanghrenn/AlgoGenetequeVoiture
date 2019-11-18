@@ -78,8 +78,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd8035f0b9b74a64994a7fbc938adfca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxRange: 10
+  vehicleMovements: {fileID: 4066874753082716423}
+  rb: {fileID: 2427853009859205332}
   pivot: {fileID: 7434046582896749212}
+  maxRangeDebugRay: 10
+  collision: 0
+  distanceTravelled: 0
 --- !u!114 &4066874753082716423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92,9 +96,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 038e8d18d28c6b549b6d4649e78b1344, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 2427853009859205332}
-  speed: 5
+  manager: {fileID: 2305028449206681938}
+  maxAngleTurn: 30
   steer: 0
+  speed: 5
 --- !u!65 &6774351277709438834
 BoxCollider:
   m_ObjectHideFlags: 0
