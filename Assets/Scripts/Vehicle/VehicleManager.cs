@@ -11,9 +11,23 @@ public class VehicleManager : MonoBehaviour
     public bool collision = false;
     public float fitness = 0f;
 
+    [Header("Parametre Raycast")]
+    public GameObject cylindreFront;
+    public GameObject cylindreLeft;
+    public GameObject cylindreRight;
+
+    private Material red;
+    private Material green;
+
+    private void Awake()
+    {
+        red = Resources.Load<Material>("Materials/Red");
+        green = Resources.Load<Material>("Materials/Green");
+    }
+
     void Update()
     {
-        DebugRaycast();
+        Raycast();
     }
 
     private void FixedUpdate()
@@ -32,40 +46,70 @@ public class VehicleManager : MonoBehaviour
             collision = true;
     }
 
-    public void DebugRaycast()
+    public void Raycast()
     {
-        Vector3 vectorRight = Quaternion.AngleAxis(45, Vector3.up) * pivot.forward;
-        Vector3 vectorLeft = Quaternion.AngleAxis(-45, Vector3.up) * pivot.forward;
-        
-        //--Debug rays hit--
+        Vector3 vectorRight = Quaternion.AngleAxis(45, Vector3.up) * transform.forward;
+        Vector3 vectorLeft = Quaternion.AngleAxis(-45, Vector3.up) * transform.forward;
+
+        //Debug rays hit
+        RaycastHit hitFront;
+        RaycastHit hitLeft;
+        RaycastHit hitRight;
         //FRONT
-        RaycastHit hit;
-        if (Physics.Raycast(pivot.position, pivot.forward, out hit, maxRangeDebugRay))
+        if (Physics.Raycast(pivot.position, transform.forward, out hitFront, maxRangeDebugRay))
         {
-            Debug.DrawRay(pivot.position, pivot.forward * hit.distance, Color.green);
+            cylindreFront.transform.position = pivot.transform.position + 0.5f * pivot.forward * hitFront.distance;
+            Vector3 scale = cylindreFront.transform.localScale;
+            scale.y = (0.5f * pivot.forward * hitFront.distance).magnitude;
+            cylindreFront.transform.localScale = scale;
+            cylindreFront.GetComponent<MeshRenderer>().material = green;
+            Debug.Log("Did Hit Front");
         }
         else
         {
-            Debug.DrawRay(pivot.position, pivot.forward * maxRangeDebugRay, Color.red);
+            cylindreFront.transform.position = pivot.transform.position + 0.5f * pivot.forward * maxRangeDebugRay;
+            Vector3 scale = cylindreFront.transform.localScale;
+            scale.y = (0.5f * pivot.forward * maxRangeDebugRay).magnitude;
+            cylindreFront.transform.localScale = scale;
+            cylindreFront.GetComponent<MeshRenderer>().material = red;
         }
 
         //RIGHT
-        if (Physics.Raycast(pivot.position, vectorRight, out hit, maxRangeDebugRay))
+        if (Physics.Raycast(pivot.position, vectorRight, out hitRight, maxRangeDebugRay))
         {
-            Debug.DrawRay(pivot.position, vectorRight * hit.distance, Color.green);
+            cylindreRight.transform.position = pivot.transform.position + 0.5f * vectorRight * hitRight.distance;
+            Vector3 scale = cylindreRight.transform.localScale;
+            scale.y = (0.5f * vectorRight * hitRight.distance).magnitude;
+            cylindreRight.transform.localScale = scale;
+            cylindreRight.GetComponent<MeshRenderer>().material = green;
+            Debug.Log("Did Hit");
         }
         else
         {
-            Debug.DrawRay(pivot.position, vectorRight * maxRangeDebugRay, Color.red);
+            cylindreRight.transform.position = pivot.transform.position + 0.5f * vectorRight * maxRangeDebugRay;
+            Vector3 scale = cylindreRight.transform.localScale;
+            scale.y = (0.5f * vectorRight * maxRangeDebugRay).magnitude;
+            cylindreRight.transform.localScale = scale;
+            cylindreRight.GetComponent<MeshRenderer>().material = red;
         }
 
         //LEFT
-        if (Physics.Raycast(pivot.position, vectorLeft, out hit, maxRangeDebugRay))
+        if (Physics.Raycast(pivot.position, vectorLeft, out hitLeft, maxRangeDebugRay))
         {
-            Debug.DrawRay(pivot.position, vectorLeft * hit.distance, Color.green);
+            cylindreLeft.transform.position = pivot.transform.position + 0.5f * vectorLeft * hitLeft.distance;
+            Vector3 scale = cylindreLeft.transform.localScale;
+            scale.y = (0.5f * vectorLeft * hitLeft.distance).magnitude;
+            cylindreLeft.transform.localScale = scale;
+            cylindreLeft.GetComponent<MeshRenderer>().material = green;
+            Debug.Log("Did Hit");
         }
         else
         {
+            cylindreLeft.transform.position = pivot.transform.position + 0.5f * vectorLeft * maxRangeDebugRay;
+            Vector3 scale = cylindreLeft.transform.localScale;
+            scale.y = (0.5f * vectorLeft * maxRangeDebugRay).magnitude;
+            cylindreLeft.transform.localScale = scale;
+            cylindreLeft.GetComponent<MeshRenderer>().material = red;
             Debug.DrawRay(pivot.position, vectorLeft * maxRangeDebugRay, Color.red);
         }
     }

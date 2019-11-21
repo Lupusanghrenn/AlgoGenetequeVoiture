@@ -12,11 +12,12 @@ public class VehiclesParam : MonoBehaviour
     public GameObject cylindreLeft;
     public GameObject cylindreRight;
 
-    public Material red;
-    public Material green;
+    private Material red;
+    private Material green;
     void Start()
     {
-        
+        red = Resources.Load<Material>("Materials/Red");
+        green = Resources.Load<Material>("Materials/Green");
     }
 
     // Update is called once per frame
