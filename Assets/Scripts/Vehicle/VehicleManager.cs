@@ -6,6 +6,7 @@ public class VehicleManager : MonoBehaviour
     public VehicleMovements vehicleMovements;
     public Rigidbody rb;
 
+    NeuralNetwork nn;
     public bool collision = false;
     public float fitness = 0f;
 
@@ -42,6 +43,10 @@ public class VehicleManager : MonoBehaviour
         cylindreExtraRight = cylinder[4];
     }
 
+    [Header("Movement")]
+    public float maxAngleTurn = 30;
+    [Range(-1, 1)] public float steer;
+    [Range(-50, 500)] public float speed = 5f;
     void Update()
     {
         Raycast();
