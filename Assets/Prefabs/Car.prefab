@@ -128,7 +128,6 @@ GameObject:
   m_Component:
   - component: {fileID: 636457377118897122}
   - component: {fileID: 2305028449206681938}
-  - component: {fileID: 4066874753082716423}
   - component: {fileID: 6774351277709438834}
   - component: {fileID: 2427853009859205332}
   m_Layer: 0
@@ -167,25 +166,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd8035f0b9b74a64994a7fbc938adfca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vehicleMovements: {fileID: 4066874753082716423}
   rb: {fileID: 2427853009859205332}
   collision: 0
   fitness: 0
   maxRangeDebugRay: 10
   pivot: {fileID: 7434046582896749212}
---- !u!114 &4066874753082716423
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7096506243655444643}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 038e8d18d28c6b549b6d4649e78b1344, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  manager: {fileID: 2305028449206681938}
   maxAngleTurn: 30
   steer: 0
   speed: 5

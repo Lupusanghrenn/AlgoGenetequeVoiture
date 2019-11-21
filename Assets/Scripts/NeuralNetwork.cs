@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class NeuralNetwork
 {
-    public int nInputs = 3;
-    public int nOutputs = 2;
+    public int nInputs = 5;
+    public int nOutputs = 1;
 
     public int nHiddenLayer = 1;
     public int nNeuronPerLayer = 4;
 
-    Neuron[][] layers;
+    public Neuron[][] layers;
 
     public NeuralNetwork()
     {
@@ -35,12 +35,12 @@ public class NeuralNetwork
         {
             for(int n = 0; n < layers[l].Length; n++)
             {
-                layers[l][n].InitWeightsAndBias();
+                layers[l][n] = new Neuron(layers[l - 1].Length);
             }
         }
     }
 
-    void InitInputs(float[] inp)
+    public void FeedInputs(float[] inp)
     {
         for(int i = 0; i < inp.Length; i++)
         {
@@ -48,7 +48,7 @@ public class NeuralNetwork
         }
     }
 
-    void Propagation() // propagation to hidden layers
+    public void Propagation()
     {
         for(int l = 1; l < layers.Length - 1; l++)
         {
@@ -59,6 +59,8 @@ public class NeuralNetwork
                 layers[l][n].ComputeActivation(previousLayer);
             }
         }
+
+        ComputeOutputs();
     }
 
     void ComputeOutputs()

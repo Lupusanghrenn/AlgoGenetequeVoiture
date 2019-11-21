@@ -8,11 +8,16 @@ public class Neuron
     public float bias;
     public List<float> weights;
 
-    public Neuron() { }
+    public Neuron(int nWeights)
+    {
+        InitWeightsAndBias(nWeights);
+    }
 
-    public Neuron(float act)
+    public Neuron(float act) // used for input layer
     {
         activation = act;
+        // no weights
+        // no bias
     }
 
     public void ComputeActivation(Neuron[] inputs)
@@ -27,10 +32,11 @@ public class Neuron
         activation = sum;
     }
 
-    public void InitWeightsAndBias()
+    public void InitWeightsAndBias(int nWeights)
     {
-        for (int i = 0; i < weights.Count; i++)
-            weights[i] = Random.Range(0, 1);
-        bias
+        weights = new List<float>();
+        for (int i = 0; i < nWeights; i++)
+            weights.Add(Random.Range(-1f, 1f));
+        bias = Random.Range(-1f, 1f);
     }
 }

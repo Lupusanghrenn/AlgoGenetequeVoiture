@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class VehicleManager : MonoBehaviour
 {
@@ -6,7 +7,8 @@ public class VehicleManager : MonoBehaviour
     public VehicleMovements vehicleMovements;
     public Rigidbody rb;
 
-    NeuralNetwork nn;
+    NeuralNetwork neuralNetwork;
+
     public bool collision = false;
     public float fitness = 0f;
 
@@ -14,24 +16,45 @@ public class VehicleManager : MonoBehaviour
     public float maxRangeDebugRay = 10.0f;
     public Transform pivot;
 
-    private GameObject cylindreFront;
-    private GameObject cylindreLeft;
     private GameObject cylindreRight;
     private GameObject cylindreExtraLeft;
+    private GameObject cylindreFront;
+    private GameObject cylindreLeft;
     private GameObject cylindreExtraRight;
+
+    RaycastHit hitFront;
+    RaycastHit hitLeft;
+    RaycastHit hitRight;
+    RaycastHit hitExtraLeft;
+    RaycastHit hitExtraRight;
 
     private Material red;
     private Material green;
 
+    [Header("Movement")]
+    public float maxAngleTurn = 30;
+    [Range(-1, 1)] public float steer;
+    [Range(-50, 500)] public float speed = 5f;
+
     private void Awake()
     {
+        vehicleMovements = new VehicleMovements(this);
+
+        neuralNetwork = new NeuralNetwork();
+
+        InitRayCast();
+    }
+
+    void InitRayCast()
+    {
+
         red = Resources.Load<Material>("Materials/Red");
         green = Resources.Load<Material>("Materials/Green");
 
         MeshRenderer[] meshes = pivot.GetComponentsInChildren<MeshRenderer>();
         GameObject[] cylinder = new GameObject[5];
 
-        for(int i = 0; i < meshes.Length; i++)
+        for (int i = 0; i < meshes.Length; i++)
         {
             cylinder[i] = meshes[i].gameObject;
             Debug.Log(cylinder[i].name);
@@ -42,11 +65,7 @@ public class VehicleManager : MonoBehaviour
         cylindreExtraLeft = cylinder[3];
         cylindreExtraRight = cylinder[4];
     }
-
-    [Header("Movement")]
-    public float maxAngleTurn = 30;
-    [Range(-1, 1)] public float steer;
-    [Range(-50, 500)] public float speed = 5f;
+    
     void Update()
     {
         Raycast();
@@ -57,9 +76,15 @@ public class VehicleManager : MonoBehaviour
         if (!collision)
         {
             vehicleMovements.Move();
+            fitness += UpdateFitness();
         }
         else
             rb.velocity = new Vector3();
+    }
+
+    private float UpdateFitness()
+    {
+        throw new NotImplementedException();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -75,12 +100,6 @@ public class VehicleManager : MonoBehaviour
         Vector3 vectorExtraLeft = Quaternion.AngleAxis(-90, Vector3.up) * transform.forward;
         Vector3 vectorExtraRight = Quaternion.AngleAxis(90, Vector3.up) * transform.forward;
 
-        //Debug rays hit
-        RaycastHit hitFront;
-        RaycastHit hitLeft;
-        RaycastHit hitRight;
-        RaycastHit hitExtraLeft;
-        RaycastHit hitExtraRight;
         //FRONT
         if (Physics.Raycast(pivot.position, transform.forward, out hitFront, maxRangeDebugRay))
         {
