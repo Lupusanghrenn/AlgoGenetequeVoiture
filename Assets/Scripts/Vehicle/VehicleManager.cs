@@ -57,7 +57,6 @@ public class VehicleManager : MonoBehaviour
         for (int i = 0; i < meshes.Length; i++)
         {
             cylinder[i] = meshes[i].gameObject;
-            Debug.Log(cylinder[i].name);
         }
         cylindreFront = cylinder[0];
         cylindreLeft = cylinder[1];
@@ -76,6 +75,7 @@ public class VehicleManager : MonoBehaviour
         if (!collision)
         {
             vehicleMovements.Move();
+            Debug.Log(hitFront.distance);
             fitness += UpdateFitness();
         }
         else
@@ -108,7 +108,6 @@ public class VehicleManager : MonoBehaviour
             scale.y = (0.5f * pivot.forward * hitFront.distance).magnitude;
             cylindreFront.transform.localScale = scale;
             cylindreFront.GetComponent<MeshRenderer>().material = green;
-            Debug.Log("Did Hit Front");
         }
         else
         {
@@ -127,7 +126,6 @@ public class VehicleManager : MonoBehaviour
             scale.y = (0.5f * vectorRight * hitRight.distance).magnitude;
             cylindreRight.transform.localScale = scale;
             cylindreRight.GetComponent<MeshRenderer>().material = green;
-            Debug.Log("Did Hit");
         }
         else
         {
@@ -146,7 +144,6 @@ public class VehicleManager : MonoBehaviour
             scale.y = (0.5f * vectorLeft * hitLeft.distance).magnitude;
             cylindreLeft.transform.localScale = scale;
             cylindreLeft.GetComponent<MeshRenderer>().material = green;
-            Debug.Log("Did Hit");
         }
         else
         {
@@ -165,7 +162,6 @@ public class VehicleManager : MonoBehaviour
             scale.y = (0.5f * vectorExtraLeft * hitExtraLeft.distance).magnitude;
             cylindreExtraLeft.transform.localScale = scale;
             cylindreExtraLeft.GetComponent<MeshRenderer>().material = green;
-            Debug.Log("Did Hit");
         }
         else
         {
@@ -184,7 +180,6 @@ public class VehicleManager : MonoBehaviour
             scale.y = (0.5f * vectorExtraRight * hitExtraRight.distance).magnitude;
             cylindreExtraRight.transform.localScale = scale;
             cylindreExtraRight.GetComponent<MeshRenderer>().material = green;
-            Debug.Log("Did Hit");
         }
         else
         {
