@@ -9,7 +9,7 @@ public class VehicleManager : MonoBehaviour
     public float maxRangeDebugRay = 10.0f;
 
     public bool collision = false;
-    public float distanceTravelled = 0f;
+    public float fitness = 0f;
 
     void Update()
     {
