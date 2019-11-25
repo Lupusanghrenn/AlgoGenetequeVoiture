@@ -885,14 +885,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 038d4406c3585ea4f89c4d201c54a5ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nbGenerationsMax: 10
+  nbGenerationsMax: 50
   MaxGenerationTime: 150
-  nbIndividus: 10
-  nbBestIndividusToKeep: 3
-  timeSpeed: 10
+  nbIndividus: 100
+  nbBestIndividusToKeep: 10
+  timeSpeed: 20
+  currentGeneration: 0
   posGeneration: {fileID: 638601505}
   vehicle: {fileID: 7096506243655444643, guid: f91f2e7a9f79f75449dd8c5678b0da8a, type: 3}
-  currentGeneration: 0
 --- !u!4 &528019070
 Transform:
   m_ObjectHideFlags: 0
