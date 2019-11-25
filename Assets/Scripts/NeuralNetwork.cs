@@ -11,6 +11,8 @@ public class NeuralNetwork
 
     public Neuron[][] layers;
 
+    public Neuron[] outputs;
+
     public NeuralNetwork()
     {
         InitArrays();
@@ -46,6 +48,7 @@ public class NeuralNetwork
         {
             layers[0][i] = new Neuron(inp[i]);
         }
+        Propagation();
     }
 
     public void Propagation()
@@ -69,5 +72,11 @@ public class NeuralNetwork
         {
             layers[layers.Length - 1][n].ComputeActivation(layers[layers.Length - 2]);
         }
+        outputs = layers[layers.Length - 1];
+    }
+
+    void ChangeWeights()
+    {
+
     }
 }

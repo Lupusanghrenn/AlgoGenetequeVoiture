@@ -13,6 +13,13 @@ public class Neuron
         InitWeightsAndBias(nWeights);
     }
 
+    //float bias / list<float> weights
+    public Neuron(float b, List<float> w)
+    {
+        bias = b;
+        weights = w;
+    }
+
     public Neuron(float act) // used for input layer
     {
         activation = act;

@@ -7,7 +7,7 @@ public class VehicleManager : MonoBehaviour
     public VehicleMovements vehicleMovements;
     public Rigidbody rb;
 
-    NeuralNetwork neuralNetwork;
+    public NeuralNetwork neuralNetwork;
 
     public bool collision = false;
     public float fitness = 0f;
@@ -31,16 +31,22 @@ public class VehicleManager : MonoBehaviour
     private Material red;
     private Material green;
 
+    private float distanceParcouru;
+
     [Header("Movement")]
     public float maxAngleTurn = 30;
     [Range(-1, 1)] public float steer;
     [Range(-50, 500)] public float speed = 5f;
+
+    private float timeCreation;
 
     private void Awake()
     {
         vehicleMovements = new VehicleMovements(this);
 
         neuralNetwork = new NeuralNetwork();
+
+        timeCreation = Time.time;
 
         InitRayCast();
     }
@@ -68,6 +74,16 @@ public class VehicleManager : MonoBehaviour
     void Update()
     {
         Raycast();
+        float dhf = hitFront.distance / maxRangeDebugRay;
+        float dhl = hitLeft.distance / maxRangeDebugRay;
+        float dhr = hitRight.distance / maxRangeDebugRay;
+        float dhel = hitExtraLeft.distance / maxRangeDebugRay;
+        float dher = hitExtraRight.distance / maxRangeDebugRay;
+
+        float[] inputs = { dhf, dhl, dhr, dhel, dher };
+
+        neuralNetwork.FeedInputs(inputs);
+        steer = Mathf.Clamp(neuralNetwork.outputs[0].activation, -1.0f, 1.0f);
     }
 
     private void FixedUpdate()
@@ -75,16 +91,19 @@ public class VehicleManager : MonoBehaviour
         if (!collision)
         {
             vehicleMovements.Move();
-            Debug.Log(hitFront.distance);
             fitness += UpdateFitness();
         }
         else
+        {
             rb.velocity = new Vector3();
+        }
+            
     }
 
     private float UpdateFitness()
     {
-        throw new NotImplementedException();
+        float result = Time.deltaTime;
+        return result;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -190,4 +209,12 @@ public class VehicleManager : MonoBehaviour
             cylindreExtraRight.GetComponent<MeshRenderer>().material = red;
         }
     }
+
+    void updateRecompense()
+    {
+        //calcul du temps vivant (tant que pas de collision)
+        float dist = rb.velocity.z * Time.deltaTime * speed;
+        distanceParcouru+=Time.deltaTime + dist;
+    }
+
 }
