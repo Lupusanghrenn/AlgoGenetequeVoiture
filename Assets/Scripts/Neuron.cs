@@ -46,4 +46,15 @@ public class Neuron
             weights.Add(Random.Range(-1f, 1f));
         bias = Random.Range(-1f, 1f);
     }
+
+    public string Print()
+    {
+        string print = "";
+        print += "activation = " + activation + "\nbiai = " + bias + "\n";
+        for(int i = 0; i < weights.Count; i++)
+        {
+            print += "weight[" + i + "] = " + weights[i] + "\n";
+        }
+        return print;
+    }
 }

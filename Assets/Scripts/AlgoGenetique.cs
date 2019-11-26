@@ -4,12 +4,8 @@ using UnityEngine;
 
 public class AlgoGenetique : MonoBehaviour
 {
-    float GenerationTime;
-
-
     [Header("Genetique parameter")]
     public int nbGenerationsMax;
-    public float MaxGenerationTime;
     public int nbIndividus = 100;
     public int nbBestIndividusToKeep = 10;
     public float timeSpeed;
@@ -19,15 +15,15 @@ public class AlgoGenetique : MonoBehaviour
     public Transform posGeneration;
     public GameObject vehicle;
 
+    [SerializeField]
     List<GameObject> allIndividus;
 
-    private List<NeuralNetwork> stockBestGeneration;
+    List<NeuralNetwork> stockBestGeneration;
     void Awake()
     {
         allIndividus = new List<GameObject>();
         stockBestGeneration = new List<NeuralNetwork>();
         Time.timeScale = timeSpeed;
-        GenerationTime = MaxGenerationTime;
     }
 
     void Start()
@@ -39,25 +35,13 @@ public class AlgoGenetique : MonoBehaviour
     {
         if (nbGenerationsMax > currentGeneration)
         {
-            //if (GenerationTime <= 0.0f)
-            //{
-            //    EndGeneration();
-            //    GenerationTime = MaxGenerationTime;
-            //    GenerateGenerationFromBest();
-            //    currentGeneration++;
-            //}
-            //else
-            //{
-               // GenerationTime -= Time.deltaTime;
-                if (AllCollisionVehicle())
-                {
-                    EndGeneration();
-                    GenerationTime = MaxGenerationTime;
-                    GenerateGenerationFromBest();
-                    currentGeneration++;
-                }
-
-            //}
+            if (AllCollisionVehicle())
+            {
+                EndGeneration();
+                GenerateGenerationFromBest();
+                currentGeneration++;
+                Debug.Log("Genreation " + currentGeneration);
+            }
         }
     }
 
@@ -84,6 +68,7 @@ public class AlgoGenetique : MonoBehaviour
 
     void GenerateGenerationFromBest()
     {
+        Debug.Log("Generate");
         for (int i = 0; i < nbBestIndividusToKeep; i++)
         {
             GameObject fille1 = Instantiate(vehicle, posGeneration.position, Quaternion.identity);
@@ -92,10 +77,20 @@ public class AlgoGenetique : MonoBehaviour
 
             allIndividus.Add(fille1);
         }
+        for (int i = 0; i < nbBestIndividusToKeep; i++)
+        {
+            allIndividus[i].GetComponent<VehicleManager>().neuralNetwork.Print();
+        }
+        Debug.Log("Croisement ");
         for (int i = nbBestIndividusToKeep; i < nbIndividus; i+=2)
         {
             //croisement des parents pour la nouvele generations
-            NeuralNetwork pere1 = allIndividus[Random.Range(0, nbBestIndividusToKeep)].GetComponent<VehicleManager>().neuralNetwork;
+            int rngP1 = Random.Range(0, nbBestIndividusToKeep);
+            int rngP2 = Random.Range(0, nbBestIndividusToKeep);
+            while(rngP2 == rngP1)
+                rngP2 = Random.Range(0, nbBestIndividusToKeep);
+
+            NeuralNetwork pere1 = allIndividus[rngP1].GetComponent<VehicleManager>().neuralNetwork;
             NeuralNetwork pere2 = allIndividus[Random.Range(0, nbBestIndividusToKeep)].GetComponent<VehicleManager>().neuralNetwork;
 
             NeuralNetwork fille1NN = Croisement(pere1, pere2);//70% de pere1
@@ -109,7 +104,6 @@ public class AlgoGenetique : MonoBehaviour
 
             allIndividus.Add(fille1);
             allIndividus.Add(fille2);
-
         }
     }
 
@@ -134,27 +128,33 @@ public class AlgoGenetique : MonoBehaviour
                 }            
             }
         }
-
-
         return nn;
     }
 
     void EndGeneration()
     {
         allIndividus.Sort(Compare);
+        if(currentGeneration >= 1)
+            Time.timeScale = 0;
         stockBestGeneration.Clear();
+        Debug.Log("Ajout des NN");
         for (int i = 0; i < nbBestIndividusToKeep; i++)
         {
+            Debug.Log(allIndividus[i].GetComponent<VehicleManager>().neuralNetwork.GetHashCode());
             stockBestGeneration.Add(allIndividus[i].GetComponent<VehicleManager>().neuralNetwork);
         }
+        Debug.Log("Fin Ajout des NN");
+        foreach (NeuralNetwork nn in stockBestGeneration)
+        {
+            nn.Print();
+            Debug.Log(nn.GetHashCode());
+        }
 
-        foreach(GameObject g in allIndividus)
+        foreach (GameObject g in allIndividus)
         {
             Destroy(g);
         }
-        allIndividus.Clear();
-
-        
+        allIndividus.Clear();    
     }
 
     static public int Compare(GameObject x, GameObject y)

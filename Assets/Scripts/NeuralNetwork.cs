@@ -75,8 +75,21 @@ public class NeuralNetwork
         outputs = layers[layers.Length - 1];
     }
 
-    void ChangeWeights()
+    public void Print()
     {
-
+        string print = "";
+        for(int i = 1; i <= nHiddenLayer; i++)
+        {
+            print += "Couche " + i + " : \n";
+            for(int j = 0; j < nNeuronPerLayer; j++)
+            {
+                print += "Neuron " + j + " = \n" + layers[i][j].Print();
+            }
+        }
+        for(int i = 0; i < nOutputs; i++)
+        {
+            print += "Output " + i + " = \n" + layers[1 + nHiddenLayer][i].Print();
+        }
+        Debug.Log(print);
     }
 }
