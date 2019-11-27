@@ -37,10 +37,10 @@ public class AlgoGenetique : MonoBehaviour
         {
             if (AllCollisionVehicle())
             {
-                EndGeneration();
-                GenerateGenerationFromBest();
                 currentGeneration++;
                 Debug.Log("Genreation " + currentGeneration);
+                EndGeneration();
+                GenerateGenerationFromBest();
             }
         }
     }
@@ -73,7 +73,7 @@ public class AlgoGenetique : MonoBehaviour
         {
             GameObject fille1 = Instantiate(vehicle, posGeneration.position, Quaternion.identity);
 
-            fille1.GetComponent<VehicleManager>().neuralNetwork = stockBestGeneration[i];
+            fille1.GetComponent<VehicleManager>().neuralNetwork = new NeuralNetwork(stockBestGeneration[i]);
 
             allIndividus.Add(fille1);
         }
@@ -90,8 +90,8 @@ public class AlgoGenetique : MonoBehaviour
             while(rngP2 == rngP1)
                 rngP2 = Random.Range(0, nbBestIndividusToKeep);
 
-            NeuralNetwork pere1 = allIndividus[rngP1].GetComponent<VehicleManager>().neuralNetwork;
-            NeuralNetwork pere2 = allIndividus[Random.Range(0, nbBestIndividusToKeep)].GetComponent<VehicleManager>().neuralNetwork;
+            NeuralNetwork pere1 = new NeuralNetwork(allIndividus[rngP1].GetComponent<VehicleManager>().neuralNetwork);
+            NeuralNetwork pere2 = new NeuralNetwork(allIndividus[rngP2].GetComponent<VehicleManager>().neuralNetwork);
 
             NeuralNetwork fille1NN = Croisement(pere1, pere2);//70% de pere1
             NeuralNetwork fille2NN = Croisement(pere2, pere1);//70% de pere2
@@ -109,11 +109,22 @@ public class AlgoGenetique : MonoBehaviour
 
     NeuralNetwork Croisement(NeuralNetwork pere1, NeuralNetwork pere2) 
     {
-        NeuralNetwork nn = pere1;
+        NeuralNetwork nn = new NeuralNetwork(pere1);
         for(int i = 1; i <= nn.nHiddenLayer; i++)
         {
             for (int j = 0; j < nn.nNeuronPerLayer; j++)
             {
+                float rngN = Random.Range(0.0f, 100.0f);
+                nn.layers[i][j].activation = 0;
+                if (rngN >= 99f)
+                {
+                    nn.layers[i][j].bias = Random.Range(-1.0f, 1.0f);
+                }
+                else if (rngN <= 29.5f)
+                {
+                    nn.layers[i][j].bias = pere2.layers[i][j].bias;
+                }
+
                 for (int k = 0; k < nn.layers[i][j].weights.Count; k++)
                 {
                     float rng = Random.Range(0.0f, 100.0f);
@@ -133,21 +144,30 @@ public class AlgoGenetique : MonoBehaviour
 
     void EndGeneration()
     {
+        Debug.Log("Début compare");
+        for (int i = 0; i < allIndividus.Count; i++)
+        {
+            allIndividus[i].GetComponent<VehicleManager>().neuralNetwork.Print();
+        }
         allIndividus.Sort(Compare);
-        if(currentGeneration >= 1)
-            Time.timeScale = 0;
+        Debug.Log("Compare fait");
+        for (int i = 0; i < allIndividus.Count; i++)
+        {
+            allIndividus[i].GetComponent<VehicleManager>().neuralNetwork.Print();
+        }
+        Debug.Log("Fin compare");
         stockBestGeneration.Clear();
         Debug.Log("Ajout des NN");
         for (int i = 0; i < nbBestIndividusToKeep; i++)
-        {
-            Debug.Log(allIndividus[i].GetComponent<VehicleManager>().neuralNetwork.GetHashCode());
-            stockBestGeneration.Add(allIndividus[i].GetComponent<VehicleManager>().neuralNetwork);
+        { 
+            allIndividus[i].GetComponent<VehicleManager>().neuralNetwork.Print();
+            stockBestGeneration.Add(new NeuralNetwork(allIndividus[i].GetComponent<VehicleManager>().neuralNetwork));
         }
         Debug.Log("Fin Ajout des NN");
-        foreach (NeuralNetwork nn in stockBestGeneration)
+        for(int i = 0; i < stockBestGeneration.Count; i++)
         {
-            nn.Print();
-            Debug.Log(nn.GetHashCode());
+            stockBestGeneration[i].Print();
+            Debug.Log(stockBestGeneration[i].GetHashCode());
         }
 
         foreach (GameObject g in allIndividus)
@@ -164,11 +184,11 @@ public class AlgoGenetique : MonoBehaviour
 
         if (vehicleManagerX.fitness > vehicleManagerY.fitness)
         {
-            return 1;
+            return -1;
         }
         else if (vehicleManagerX.fitness < vehicleManagerY.fitness)
         {
-            return -1;
+            return 1;
         }
         else
         {

@@ -19,6 +19,15 @@ public class NeuralNetwork
         InitWeightsAndBias();
     }
 
+    public NeuralNetwork(NeuralNetwork nn)
+    {
+        InitArrays();
+        for(int i = 0; i < 1 + nHiddenLayer + 1; i++)
+        {
+            nn.layers[i].CopyTo(layers[i], 0);
+        }
+    }
+
     void InitArrays()
     {
         layers = new Neuron[1 + nHiddenLayer + 1][];
