@@ -11,6 +11,7 @@ public class AlgoGenetique : MonoBehaviour
     public int nbBestIndividusToKeep = 10;
     [Range(0, 70)] public float timeSpeed;
     public int currentGeneration = 0;
+    public float maxTimeGeneration;
 
     [Header("Init vehicule")]
     public Transform posGeneration;
@@ -22,6 +23,7 @@ public class AlgoGenetique : MonoBehaviour
     public Text displayBest;
 
     List<NeuralNetwork> stockBestGeneration;
+    public float currentTime = 0.0f;
     void Awake()
     {
         allIndividus = new List<GameObject>();
@@ -35,6 +37,14 @@ public class AlgoGenetique : MonoBehaviour
 
     void Update()
     {
+        if (currentTime > maxTimeGeneration)
+        {
+            currentGeneration++;
+            Debug.Log("Genreation " + currentGeneration);
+            EndGeneration();
+            GenerateGenerationFromBest();
+            currentTime = 0.0f;
+        }
         Time.timeScale = timeSpeed;
         if (nbGenerationsMax > currentGeneration)
         {
@@ -49,6 +59,7 @@ public class AlgoGenetique : MonoBehaviour
                 bestFitness = float.MinValue;
             }
         }
+        currentTime += Time.deltaTime;
     }
 
     void FindBest()
@@ -101,6 +112,7 @@ public class AlgoGenetique : MonoBehaviour
             NeuralNetwork pere1 = new NeuralNetwork(allIndividus[rngP1].GetComponent<VehicleManager>().neuralNetwork);
             NeuralNetwork pere2 = new NeuralNetwork(allIndividus[rngP2].GetComponent<VehicleManager>().neuralNetwork);
 
+            //prendre des segments du neurones
             NeuralNetwork fille1NN = Croisement(pere1, pere2);//70% de pere1
             NeuralNetwork fille2NN = Croisement(pere2, pere1);//70% de pere2
 
@@ -182,5 +194,23 @@ public class AlgoGenetique : MonoBehaviour
         {
             return 0;
         }
+    }
+
+    List<VehicleManager> GetBest()
+    {
+        List<VehicleManager> res = new List<VehicleManager>();
+        for(int i = 0; i < nbBestIndividusToKeep; i++)
+        {
+            VehicleManager best = allIndividus[0].GetComponent<VehicleManager>();
+            for(int j = 1; j < allIndividus.Count; j++)
+            {
+                if(allIndividus[j].GetComponent<VehicleManager>().fitness < best.fitness)
+                {
+                    best = allIndividus[j].GetComponent<VehicleManager>();
+                }
+                stockBestGeneration.Add(new NeuralNetwork(best.neuralNetwork));
+            }
+        }
+        return res;
     }
 }

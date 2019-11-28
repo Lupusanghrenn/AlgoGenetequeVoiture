@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class VehicleManager : MonoBehaviour
@@ -11,6 +12,7 @@ public class VehicleManager : MonoBehaviour
 
     public bool collision = false;
     public float fitness = 0f;
+    public int indexCheckPoint = 0;
 
     [Header("Parametre Raycast")]
     public float maxRangeDebugRay = 10.0f;
@@ -32,6 +34,8 @@ public class VehicleManager : MonoBehaviour
     private Material green;
 
     private float distanceParcouru;
+
+    public List<Transform> checkpoints;
 
     [Header("Movement")]
     public float maxAngleTurn = 30;
@@ -100,10 +104,18 @@ public class VehicleManager : MonoBehaviour
             
     }
 
+    //distance parcouru
     private float UpdateFitness()
     {
         float result = Time.deltaTime;
+
+
         return result;
+    }
+
+    void reachCheckpoint(int indiceChecpoints)
+    {
+        
     }
 
     private void OnTriggerEnter(Collider other)

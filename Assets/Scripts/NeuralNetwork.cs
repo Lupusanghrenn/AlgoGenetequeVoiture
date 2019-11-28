@@ -99,6 +99,6 @@ public class NeuralNetwork
         {
             print += "Output " + i + " = \n" + layers[1 + nHiddenLayer][i].Print();
         }
-        Debug.Log(print);
+        //Debug.Log(print);
     }
 }
