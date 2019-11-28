@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AlgoGenetique : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class AlgoGenetique : MonoBehaviour
     public int nbGenerationsMax;
     public int nbIndividus = 100;
     public int nbBestIndividusToKeep = 10;
-    public float timeSpeed;
+    [Range(0, 70)] public float timeSpeed;
     public int currentGeneration = 0;
 
     [Header("Init vehicule")]
@@ -17,13 +18,14 @@ public class AlgoGenetique : MonoBehaviour
 
     [SerializeField]
     List<GameObject> allIndividus;
+    float bestFitness = float.MinValue;
+    public Text displayBest;
 
     List<NeuralNetwork> stockBestGeneration;
     void Awake()
     {
         allIndividus = new List<GameObject>();
         stockBestGeneration = new List<NeuralNetwork>();
-        Time.timeScale = timeSpeed;
     }
 
     void Start()
@@ -33,15 +35,25 @@ public class AlgoGenetique : MonoBehaviour
 
     void Update()
     {
+        Time.timeScale = timeSpeed;
         if (nbGenerationsMax > currentGeneration)
         {
             if (AllCollisionVehicle())
             {
                 currentGeneration++;
-                Debug.Log("Genreation " + currentGeneration);
+                Debug.Log("Generation " + currentGeneration);
                 EndGeneration();
                 GenerateGenerationFromBest();
             }
+        }
+        FindBest();
+    }
+
+    void FindBest()
+    {
+        foreach(GameObject nn in allIndividus)
+        {
+            bestFitness = Mathf.Max(nn.GetComponent<VehicleManager>().fitness, bestFitness);
         }
     }
 
@@ -144,32 +156,12 @@ public class AlgoGenetique : MonoBehaviour
 
     void EndGeneration()
     {
-        Debug.Log("Début compare");
-        for (int i = 0; i < allIndividus.Count; i++)
-        {
-            allIndividus[i].GetComponent<VehicleManager>().neuralNetwork.Print();
-        }
         allIndividus.Sort(Compare);
-        Debug.Log("Compare fait");
-        for (int i = 0; i < allIndividus.Count; i++)
-        {
-            allIndividus[i].GetComponent<VehicleManager>().neuralNetwork.Print();
-        }
-        Debug.Log("Fin compare");
         stockBestGeneration.Clear();
-        Debug.Log("Ajout des NN");
         for (int i = 0; i < nbBestIndividusToKeep; i++)
         { 
-            allIndividus[i].GetComponent<VehicleManager>().neuralNetwork.Print();
             stockBestGeneration.Add(new NeuralNetwork(allIndividus[i].GetComponent<VehicleManager>().neuralNetwork));
         }
-        Debug.Log("Fin Ajout des NN");
-        for(int i = 0; i < stockBestGeneration.Count; i++)
-        {
-            stockBestGeneration[i].Print();
-            Debug.Log(stockBestGeneration[i].GetHashCode());
-        }
-
         foreach (GameObject g in allIndividus)
         {
             Destroy(g);

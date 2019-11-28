@@ -13,7 +13,7 @@ public class Neuron
         InitWeightsAndBias(nWeights);
     }
 
-    //float bias / list<float> weights
+    // float bias / list<float> weights
     public Neuron(float b, List<float> w)
     {
         bias = b;
