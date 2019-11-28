@@ -41,8 +41,10 @@ public class AlgoGenetique : MonoBehaviour
         {
             currentGeneration++;
             Debug.Log("Genreation " + currentGeneration);
+            stockBestGeneration.Clear();
             EndGeneration();
             GenerateGenerationFromBest();
+            bestFitness = float.MinValue;
             currentTime = 0.0f;
         }
         Time.timeScale = timeSpeed;
@@ -54,9 +56,11 @@ public class AlgoGenetique : MonoBehaviour
                 Debug.Log("Generation " + currentGeneration);
                 FindBest();
                 Debug.Log(bestFitness);
+                stockBestGeneration.Clear();
                 EndGeneration();
                 GenerateGenerationFromBest();
                 bestFitness = float.MinValue;
+                currentTime = 0f;
             }
         }
         currentTime += Time.deltaTime;
@@ -93,12 +97,16 @@ public class AlgoGenetique : MonoBehaviour
 
     void GenerateGenerationFromBest()
     {
+        Debug.Log("Debut");
+        foreach(NeuralNetwork n in stockBestGeneration)
+        {
+            n.Print();
+        }
+        Debug.Log("Fin");
         for (int i = 0; i < nbBestIndividusToKeep; i++)
         {
             GameObject fille1 = Instantiate(vehicle, posGeneration.position, Quaternion.identity);
-
             fille1.GetComponent<VehicleManager>().neuralNetwork = new NeuralNetwork(stockBestGeneration[i]);
-
             allIndividus.Add(fille1);
         }
         for (int i = nbBestIndividusToKeep; i < nbIndividus; i+=2)
@@ -129,34 +137,26 @@ public class AlgoGenetique : MonoBehaviour
 
     NeuralNetwork Croisement(NeuralNetwork pere1, NeuralNetwork pere2) 
     {
-        NeuralNetwork nn = new NeuralNetwork(pere1);
+        NeuralNetwork nn = new NeuralNetwork();
+        int nbNeuronPere = Mathf.RoundToInt(nn.nNeuronPerLayer * 0.7f);
         for(int i = 1; i <= nn.nHiddenLayer; i++)
         {
-            for (int j = 0; j < nn.nNeuronPerLayer; j++)
+            List<int> indexUse = new List<int>(nn.nNeuronPerLayer);
+            for (int j = 0; j < nbNeuronPere; j++)
             {
-                float rngN = Random.Range(0.0f, 100.0f);
-                nn.layers[i][j].activation = 0;
-                if (rngN >= 99f)
-                {
-                    nn.layers[i][j].bias = Random.Range(-1.0f, 1.0f);
-                }
-                else if (rngN <= 29.5f)
-                {
-                    nn.layers[i][j].bias = pere2.layers[i][j].bias;
-                }
+                int rngN;
+                do
+                    rngN = Random.Range(0, nn.nNeuronPerLayer);
+                while (indexUse.Contains(rngN));
+                indexUse.Add(rngN);
 
-                for (int k = 0; k < nn.layers[i][j].weights.Count; k++)
-                {
-                    float rng = Random.Range(0.0f, 100.0f);
-                    if (rng >= 99f)
-                    {
-                        nn.layers[i][j].weights[k] = Random.Range(-1.0f, 1.0f);
-                    }
-                    else if(rng <= 29.5f)
-                    {
-                        nn.layers[i][j].weights[k] = pere2.layers[i][j].weights[k];
-                    }
-                }            
+                nn.layers[i][rngN] = pere1.layers[i][rngN];        
+            }
+
+            for(int j = 0; j < nn.nNeuronPerLayer; j++)
+            {
+                if(!indexUse.Contains(j))
+                    nn.layers[i][j] = pere2.layers[i][j];
             }
         }
         return nn;
@@ -164,12 +164,7 @@ public class AlgoGenetique : MonoBehaviour
 
     void EndGeneration()
     {
-        allIndividus.Sort(Compare);
-        stockBestGeneration.Clear();
-        for (int i = 0; i < nbBestIndividusToKeep; i++)
-        { 
-            stockBestGeneration.Add(new NeuralNetwork(allIndividus[i].GetComponent<VehicleManager>().neuralNetwork));
-        }
+        GetBest();
         foreach (GameObject g in allIndividus)
         {
             Destroy(g);
@@ -196,21 +191,22 @@ public class AlgoGenetique : MonoBehaviour
         }
     }
 
-    List<VehicleManager> GetBest()
+    void GetBest()
     {
-        List<VehicleManager> res = new List<VehicleManager>();
         for(int i = 0; i < nbBestIndividusToKeep; i++)
         {
             VehicleManager best = allIndividus[0].GetComponent<VehicleManager>();
             for(int j = 1; j < allIndividus.Count; j++)
             {
-                if(allIndividus[j].GetComponent<VehicleManager>().fitness < best.fitness)
+                if(allIndividus[j].GetComponent<VehicleManager>().fitness > best.fitness)
                 {
                     best = allIndividus[j].GetComponent<VehicleManager>();
                 }
-                stockBestGeneration.Add(new NeuralNetwork(best.neuralNetwork));
             }
+            Debug.Log("best " + i + " = " + best.fitness);
+            stockBestGeneration.Add(new NeuralNetwork(best.neuralNetwork));
+            allIndividus.Remove(best.gameObject);
+            Destroy(best.gameObject);
         }
-        return res;
     }
 }

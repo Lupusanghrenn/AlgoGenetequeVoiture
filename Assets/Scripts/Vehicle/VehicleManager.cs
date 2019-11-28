@@ -43,6 +43,7 @@ public class VehicleManager : MonoBehaviour
     [Range(-50, 500)] public float speed = 5f;
 
     private float timeCreation;
+    private Vector3 initPos;
 
     private void Awake()
     {
@@ -51,6 +52,8 @@ public class VehicleManager : MonoBehaviour
         neuralNetwork = new NeuralNetwork();
 
         timeCreation = Time.time;
+
+        initPos = transform.position;
 
         InitRayCast();
     }
@@ -95,7 +98,7 @@ public class VehicleManager : MonoBehaviour
         if (!collision)
         {
             vehicleMovements.Move();
-            fitness += UpdateFitness();
+            fitness = UpdateFitness();
         }
         else
         {
@@ -107,9 +110,7 @@ public class VehicleManager : MonoBehaviour
     //distance parcouru
     private float UpdateFitness()
     {
-        float result = Time.deltaTime;
-
-
+        float result = (transform.position - initPos).magnitude;
         return result;
     }
 
