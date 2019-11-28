@@ -42,11 +42,12 @@ public class AlgoGenetique : MonoBehaviour
             {
                 currentGeneration++;
                 Debug.Log("Generation " + currentGeneration);
+                FindBest();
+                Debug.Log(bestFitness);
                 EndGeneration();
                 GenerateGenerationFromBest();
             }
         }
-        FindBest();
     }
 
     void FindBest()
@@ -80,7 +81,6 @@ public class AlgoGenetique : MonoBehaviour
 
     void GenerateGenerationFromBest()
     {
-        Debug.Log("Generate");
         for (int i = 0; i < nbBestIndividusToKeep; i++)
         {
             GameObject fille1 = Instantiate(vehicle, posGeneration.position, Quaternion.identity);
@@ -89,11 +89,6 @@ public class AlgoGenetique : MonoBehaviour
 
             allIndividus.Add(fille1);
         }
-        for (int i = 0; i < nbBestIndividusToKeep; i++)
-        {
-            allIndividus[i].GetComponent<VehicleManager>().neuralNetwork.Print();
-        }
-        Debug.Log("Croisement ");
         for (int i = nbBestIndividusToKeep; i < nbIndividus; i+=2)
         {
             //croisement des parents pour la nouvele generations
