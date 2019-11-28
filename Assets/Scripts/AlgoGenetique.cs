@@ -46,6 +46,7 @@ public class AlgoGenetique : MonoBehaviour
                 Debug.Log(bestFitness);
                 EndGeneration();
                 GenerateGenerationFromBest();
+                bestFitness = float.MinValue;
             }
         }
     }
