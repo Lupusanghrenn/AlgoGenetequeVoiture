@@ -18,11 +18,18 @@ public class AlgoGenetique : MonoBehaviour
     public GameObject vehicle;
 
     [Header("Text UI parameter")]
-    public Text pop, vitesseJeu, nbMeilleur, nbGene, currentGene, distance;
+    public Text pop;
+    public Text vitesseJeu;
+    public Text nbMeilleur;
+    public Text nbGene;
+    public Text currentGene;
+    public Text distance;
+    public Text avgDistance;
 
     [SerializeField]
     List<GameObject> allIndividus;
     float bestFitness = float.MinValue;
+    double avgFitness = 0.0d;
     public Text displayBest;
 
     List<NeuralNetwork> stockBestGeneration;
@@ -164,11 +171,14 @@ public class AlgoGenetique : MonoBehaviour
     void EndGeneration()
     {
         GetBest();
-        resetUI();
+        double summ = 0.0d;
         foreach (GameObject g in allIndividus)
         {
+            summ += g.GetComponent<VehicleManager>().fitness;
             Destroy(g);
         }
+        avgFitness = summ / (double)allIndividus.Count;
+        resetUI();
         allIndividus.Clear();    
     }
 
@@ -219,6 +229,7 @@ public class AlgoGenetique : MonoBehaviour
         nbMeilleur.text = nbBestIndividusToKeep.ToString();
         nbGene.text = nbGenerationsMax.ToString();
         currentGene.text = currentGeneration.ToString();
-        distance.text = bestFitness.ToString();
+        distance.text = bestFitness.ToString(".000");
+        avgDistance.text = avgFitness.ToString(".000");
     }
 }
