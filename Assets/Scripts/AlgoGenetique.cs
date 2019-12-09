@@ -17,6 +17,9 @@ public class AlgoGenetique : MonoBehaviour
     public Transform posGeneration;
     public GameObject vehicle;
 
+    [Header("Text UI parameter")]
+    public Text pop, vitesseJeu, nbMeilleur, nbGene, currentGene, distance;
+
     [SerializeField]
     List<GameObject> allIndividus;
     float bestFitness = float.MinValue;
@@ -32,6 +35,7 @@ public class AlgoGenetique : MonoBehaviour
 
     void Start()
     {
+        resetUI();
         GenerateGeneration();
     }
 
@@ -40,7 +44,6 @@ public class AlgoGenetique : MonoBehaviour
         if (currentTime > maxTimeGeneration)
         {
             currentGeneration++;
-            Debug.Log("Genreation " + currentGeneration);
             stockBestGeneration.Clear();
             EndGeneration();
             GenerateGenerationFromBest();
@@ -53,9 +56,7 @@ public class AlgoGenetique : MonoBehaviour
             if (AllCollisionVehicle())
             {
                 currentGeneration++;
-                Debug.Log("Generation " + currentGeneration);
                 FindBest();
-                Debug.Log(bestFitness);
                 stockBestGeneration.Clear();
                 EndGeneration();
                 GenerateGenerationFromBest();
@@ -97,16 +98,12 @@ public class AlgoGenetique : MonoBehaviour
 
     void GenerateGenerationFromBest()
     {
-        Debug.Log("Debut");
-        foreach(NeuralNetwork n in stockBestGeneration)
-        {
-            n.Print();
-        }
-        Debug.Log("Fin");
         for (int i = 0; i < nbBestIndividusToKeep; i++)
         {
             GameObject fille1 = Instantiate(vehicle, posGeneration.position, Quaternion.identity);
             fille1.GetComponent<VehicleManager>().neuralNetwork = new NeuralNetwork(stockBestGeneration[i]);
+            if (i == 0)
+                fille1.GetComponentInChildren<MeshRenderer>().material.color = Color.yellow;
             allIndividus.Add(fille1);
         }
         for (int i = nbBestIndividusToKeep; i < nbIndividus; i+=2)
@@ -165,6 +162,7 @@ public class AlgoGenetique : MonoBehaviour
     void EndGeneration()
     {
         GetBest();
+        resetUI();
         foreach (GameObject g in allIndividus)
         {
             Destroy(g);
@@ -203,10 +201,22 @@ public class AlgoGenetique : MonoBehaviour
                     best = allIndividus[j].GetComponent<VehicleManager>();
                 }
             }
-            Debug.Log("best " + i + " = " + best.fitness);
+         
+            if (best.fitness > bestFitness)
+                bestFitness = best.fitness;
             stockBestGeneration.Add(new NeuralNetwork(best.neuralNetwork));
             allIndividus.Remove(best.gameObject);
             Destroy(best.gameObject);
         }
+    }
+
+    void resetUI()
+    {
+        pop.text = nbIndividus.ToString();
+        vitesseJeu.text = timeSpeed.ToString();
+        nbMeilleur.text = nbBestIndividusToKeep.ToString();
+        nbGene.text = nbGenerationsMax.ToString();
+        currentGene.text = currentGeneration.ToString();
+        distance.text = bestFitness.ToString();
     }
 }
