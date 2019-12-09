@@ -33,7 +33,7 @@ public class VehicleManager : MonoBehaviour
     private Material red;
     private Material green;
 
-    private float distanceParcouru;
+    public float distanceParcouru;
 
     public List<Transform> checkpoints;
 
@@ -51,7 +51,7 @@ public class VehicleManager : MonoBehaviour
 
         neuralNetwork = new NeuralNetwork();
 
-        timeCreation = Time.time;
+        //timeCreation = Time.time;
 
         initPos = transform.position;
 

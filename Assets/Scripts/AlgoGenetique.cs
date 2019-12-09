@@ -37,6 +37,8 @@ public class AlgoGenetique : MonoBehaviour
     {
         resetUI();
         GenerateGeneration();
+        allIndividus[0].GetComponent<VehicleManager>().neuralNetwork.Print();
+        allIndividus[0].GetComponent<VehicleManager>().neuralNetwork.exportToFile("test");
     }
 
     void Update()
