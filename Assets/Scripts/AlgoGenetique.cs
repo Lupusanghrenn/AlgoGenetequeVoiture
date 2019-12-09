@@ -28,7 +28,7 @@ public class AlgoGenetique : MonoBehaviour
 
     [SerializeField]
     List<GameObject> allIndividus;
-    float bestFitness = float.MinValue;
+    float bestFitness = 0;
     double avgFitness = 0.0d;
     public Text displayBest;
 
@@ -44,8 +44,7 @@ public class AlgoGenetique : MonoBehaviour
     {
         resetUI();
         GenerateGeneration();
-        allIndividus[0].GetComponent<VehicleManager>().neuralNetwork.Print();
-        allIndividus[0].GetComponent<VehicleManager>().neuralNetwork.exportToFile("test");
+        //GenerateGeneration("test");
     }
 
     void Update()
@@ -53,11 +52,12 @@ public class AlgoGenetique : MonoBehaviour
         if (currentTime > maxTimeGeneration)
         {
             currentGeneration++;
+            FindBest();
             stockBestGeneration.Clear();
             EndGeneration();
             GenerateGenerationFromBest();
             bestFitness = float.MinValue;
-            currentTime = 0.0f;
+            currentTime = 0f;
         }
         Time.timeScale = timeSpeed;
         if (nbGenerationsMax > currentGeneration)
@@ -105,8 +105,19 @@ public class AlgoGenetique : MonoBehaviour
         }
     }
 
+    void GenerateGeneration(string pathToNet)
+    {
+        for (int i = 0; i < nbIndividus; i++)
+        {
+            GameObject individu = Instantiate(vehicle, posGeneration.position, Quaternion.identity);
+            individu.GetComponent<VehicleManager>().neuralNetwork.importSettings(pathToNet);
+            allIndividus.Add(individu);
+        }
+    }
+
     void GenerateGenerationFromBest()
     {
+        stockBestGeneration[0].exportToFile("test");
         for (int i = 0; i < nbBestIndividusToKeep; i++)
         {
             GameObject fille1 = Instantiate(vehicle, posGeneration.position, Quaternion.identity);

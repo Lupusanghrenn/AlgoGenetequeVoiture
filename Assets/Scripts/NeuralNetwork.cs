@@ -126,7 +126,7 @@ public class NeuralNetwork
         streamWriter.Close();
     }
 
-    public NeuralNetwork (string path)
+    public void importSettings(string path)
     {
         StreamReader reader = new StreamReader(path+".net");
 
